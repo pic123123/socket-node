@@ -1,8 +1,11 @@
 const express = require("express");
-const cors = require("cors");
-
 const app = express();
 const PORT = 4000;
+const cors = require("cors");
+const http = require("http");
+const socketIo = require("socket.io");
+const server = http.createServer(app);
+const io = socketIo(server);
 
 app.use(
   cors({
@@ -11,12 +14,18 @@ app.use(
   })
 );
 
+io.on("connection", (socket) => {
+  socket.on("message", ({ name, message }) => {
+    io.emit("message", { name, message });
+  });
+});
+
 app.get("/api", (req, res) => {
   res.status(200).json({
     message: "Hello world",
   });
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
