@@ -14,8 +14,12 @@ app.use(
   })
 );
 
+// connection event handler
+// connection이 수립되면 event handler function의 인자로 socket이 들어온다
 io.on("connection", (socket) => {
+  //현재 접속되어 있는 클라이언트로부터의 메시지를 수신하기 위해서는 on 메소드를 사용한다.
   socket.on("message", ({ name, message }) => {
+    //접속된 모든 클라이언트에게 메시지를 전송한다.
     io.emit("message", { name, message });
   });
 });
